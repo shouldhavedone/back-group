@@ -8,13 +8,13 @@
         :class="getPath(item.url) ? 'is-active' : 'unactive-menu'"
       >
         <div slot="title">
-          <span class="iconfont" :class="item.icon"></span>
+          <span class="iconfont icon" :class="item.icon"></span>
           <span>{{ item.name }}</span>
         </div>
       </el-menu-item>
       <el-submenu :index="item.id + ''" :key="item.id" v-else>
         <template slot="title">
-          <span class="iconfont" :class="item.icon"></span>
+          <span class="iconfont icon" :class="item.icon"></span>
           <span>{{ item.name }}</span>
         </template>
         <NavMenu :navMenus="item.children"></NavMenu>
@@ -45,12 +45,16 @@ export default {
 
 <style lang="less">
 .menu-content {
-  .el-submenu [class^="el-icon-"] {
-    width: 16px;
+  .el-menu-item {
+    color: #000 !important;
   }
-  .el-submenu__title i {
+  .el-submenu__title {
+    color: #000 !important;
+  }
+  .icon {
     text-align: left;
     font-size: 16px;
+    margin-right: 10px;
   }
 }
 </style>

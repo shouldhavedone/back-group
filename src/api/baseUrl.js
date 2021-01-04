@@ -1,5 +1,5 @@
 // 开发环境
-const developUrl = '';
+const developUrl = 'http://127.0.0.1:7001';
 // 测试环境
 const testUrl = '';
 // 线上环境

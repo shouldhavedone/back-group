@@ -24,10 +24,7 @@
         <el-main>
           <div class="main-content">
             <div class="detail-content">
-              <router-view
-                v-if="!$route.meta.keepalive"
-                :key="$route.path"
-              ></router-view>
+              <router-view v-if="!$route.meta.keepalive" :key="$route.path"></router-view>
             </div>
           </div>
         </el-main>
@@ -58,19 +55,11 @@ export default {
               url: "/blog/article",
               icon: "iconarticle",
               name: "文章管理",
-              children: [
-                {
-                  id: "1-1-1",
-                  url: "/blog/article/add",
-                  icon: "iconarticle",
-                  name: "测试",
-                },
-              ],
             },
             {
               id: "1-2",
               url: "/blog/label",
-              icon: "iconlabel",
+              icon: "iconlabel1",
               name: "分类管理",
             },
             {
@@ -88,45 +77,11 @@ export default {
           ],
         },
         {
-          id: "2",
-          icon: "iconblog",
-          name: "博客管理",
-          url: "/blog",
-          children: [
-            {
-              id: "2-1",
-              url: "/blog/article",
-              icon: "iconarticle",
-              name: "文章管理",
-              children: [
-                {
-                  id: "2-1-1",
-                  url: "/blog/article/add",
-                  icon: "iconarticle",
-                  name: "测试",
-                },
-              ],
-            },
-            {
-              id: "2-2",
-              url: "/blog/label",
-              icon: "iconlabel",
-              name: "分类管理",
-            },
-            {
-              id: "2-3",
-              url: "/blog/project",
-              icon: "iconxiangmu",
-              name: "项目管理",
-            },
-            {
-              id: "2-4",
-              url: "/blog/message",
-              icon: "iconmessage",
-              name: "留言管理",
-            },
-          ],
-        },
+          id: "10",
+          icon: "iconshezhi",
+          name: "系统设置",
+          url: "/setting",
+        }
       ],
       openSubs: ['1'],
     };
@@ -165,7 +120,7 @@ export default {
   .el-scrollbar {
     height: 100%;
 
-    /deep/.el-scrollbar__view {
+    .el-scrollbar__view {
       height: 100%;
     }
 

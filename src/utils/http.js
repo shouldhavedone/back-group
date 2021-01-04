@@ -8,14 +8,14 @@ export const http = axios.create({
   baseURL: URL,
   timeout: 1000 * 60 * 2,
   loading: false,
-  withCredentials: true, //跨域请求同自带cookie
+  withCredentials: false, //跨域请求同自带cookie
 });
 
 // 请求拦截器,在请求发出之前进行一些操作
 http.interceptors.request.use(
   function(config) {
     let token = store.state.token;
-    if (config.url.split("?")[0] == "/blog/oauth/token") {
+    if (config.url.split("?")[0] == "/back-auth/oauth/token") {
       config.headers["Authorization"] = "Basic dml0b0FwcDp2aXRvc2VjcmV0";
     } else {
       if (token) {
@@ -36,7 +36,7 @@ http.interceptors.request.use(
 
 //响应拦截器异常处理
 http.interceptors.response.use(
-  (response) => {
+  response => {
     if (response && response.data.code !== 200 && response.data.code !== 1) {
       if (response.data.code === 401) {
         sessionStorage.clear();

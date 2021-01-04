@@ -1,10 +1,66 @@
 {
   "id": "2299850",
-  "name": "blog",
+  "name": "project",
   "font_family": "iconfont",
   "css_prefix_text": "icon",
-  "description": "个人博客",
+  "description": "个人x'mu",
   "glyphs": [
+    {
+      "icon_id": "687393",
+      "name": "label",
+      "font_class": "label1",
+      "unicode": "e6bc",
+      "unicode_decimal": 59068
+    },
+    {
+      "icon_id": "5485658",
+      "name": "收缩",
+      "font_class": "shousuo",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "1160235",
+      "name": "user-info",
+      "font_class": "userinfo",
+      "unicode": "e6a8",
+      "unicode_decimal": 59048
+    },
+    {
+      "icon_id": "1634064",
+      "name": "modify",
+      "font_class": "modify",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "18361106",
+      "name": "type",
+      "font_class": "type",
+      "unicode": "e779",
+      "unicode_decimal": 59257
+    },
+    {
+      "icon_id": "18442519",
+      "name": "log-out",
+      "font_class": "log-out",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "11178035",
+      "name": "通知",
+      "font_class": "ziyuan",
+      "unicode": "e64e",
+      "unicode_decimal": 58958
+    },
+    {
+      "icon_id": "16554065",
+      "name": "editor-screen-full",
+      "font_class": "editor-screen-full",
+      "unicode": "e8c7",
+      "unicode_decimal": 59591
+    },
     {
       "icon_id": "128818",
       "name": "blog",

@@ -25,16 +25,16 @@ Vue.use(ElementUI)
 Vue.use(httpPlugin)
 Vue.use(VueCookie)
 
-// router.beforeEach((to, from, next) => {
-//   let token = store.state.token
-//   if (!token && to.path !== '/login') {
-//     next({
-//       path: '/login'
-//     })
-//     return;
-//   }
-//   next()
-// })
+router.beforeEach((to, from, next) => {
+  let token = store.state.token
+  if (!token && to.path !== '/login') {
+    next({
+      path: '/login'
+    })
+    return;
+  }
+  next()
+})
 
 new Vue({
   router,

@@ -26,7 +26,8 @@ export default new Vuex.Store({
     },
     // 将用户信息存入vuex和session中
     SET_USER(state, user) {
-      setSession("token", JSON.stringify(user));
+      console.log(user)
+      setSession("userInfo", JSON.stringify(user));
       state.userInfo = user;
     },
     DEL_TOKEN(state) {

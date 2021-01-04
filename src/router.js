@@ -13,11 +13,31 @@ const routes = [
   {
     path: "/",
     component: Home,
+    redirect: '/blog/article'
+  },
+  {
+    path: "/blog",
+    component: Home,
     children: [
       {
-        path: "",
-        name: "home",
-        component: () => import("./views/home"),
+        path: "/blog/article",
+        name: "article",
+        component: () => import("./views/blog/article"),
+      },
+      {
+        path: "/blog/label",
+        name: "label",
+        component: () => import("./views/blog/label"),
+      },
+      {
+        path: "/blog/project",
+        name: "project",
+        component: () => import("./views/blog/project"),
+      },
+      {
+        path: "/blog/message",
+        name: "message",
+        component: () => import("./views/blog/message"),
       },
     ],
   },

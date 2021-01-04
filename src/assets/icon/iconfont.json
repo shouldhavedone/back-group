@@ -6,6 +6,27 @@
   "description": "个人x'mu",
   "glyphs": [
     {
+      "icon_id": "5064096",
+      "name": "统计",
+      "font_class": "tongji",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "15838542",
+      "name": "toggle-left",
+      "font_class": "toggle-left",
+      "unicode": "e680",
+      "unicode_decimal": 59008
+    },
+    {
+      "icon_id": "15838543",
+      "name": "toggle-right",
+      "font_class": "toggle-right",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
       "icon_id": "687393",
       "name": "label",
       "font_class": "label1",

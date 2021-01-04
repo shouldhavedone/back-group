@@ -2,20 +2,18 @@
   <div class="menu-content">
     <div v-for="(item, index) in navMenus" :key="index">
       <el-menu-item
+        v-if="!item.children || item.children.length == 0"
         :index="item.url ? item.url + '' : item.id + ''"
         :key="item.id"
-        v-if="!item.children || item.children.length == 0"
         :class="getPath(item.url) ? 'is-active' : 'unactive-menu'"
       >
-        <div slot="title">
-          <span class="iconfont icon" :class="item.icon"></span>
-          <span>{{ item.name }}</span>
-        </div>
+        <i class="iconfont icon" :class="item.icon"></i>
+        <span slot="title">{{ item.name }}</span>
       </el-menu-item>
       <el-submenu :index="item.id + ''" :key="item.id" v-else>
         <template slot="title">
-          <span class="iconfont icon" :class="item.icon"></span>
-          <span>{{ item.name }}</span>
+          <i class="iconfont icon" :class="item.icon"></i>
+          <span slot="title">{{ item.name }}</span>
         </template>
         <NavMenu :navMenus="item.children"></NavMenu>
       </el-submenu>
@@ -57,4 +55,5 @@ export default {
     margin-right: 10px;
   }
 }
+
 </style>

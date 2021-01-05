@@ -23,14 +23,10 @@
           </div>
         </el-aside>
         <el-main>
-          <div class="main-content">
-            <div class="detail-content">
-              <router-view
-                v-if="!$route.meta.keepalive"
-                :key="$route.path"
-              ></router-view>
-            </div>
-          </div>
+          <router-view
+            v-if="!$route.meta.keepalive"
+            :key="$route.path"
+          ></router-view>
         </el-main>
       </el-container>
     </el-container>

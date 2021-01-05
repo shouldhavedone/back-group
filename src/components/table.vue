@@ -107,7 +107,7 @@ export default {
       this.$emit("sortChange", column);
     },
     rowDBLClick(row, column, event) {
-      this.$emit("btnClick", { id: 2, row });
+      this.$emit("btnClick", { id: 1, row });  // id: 1 编辑  2 详情  3 删除
     },
   },
 };

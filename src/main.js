@@ -10,17 +10,15 @@ import 'element-ui/lib/theme-chalk/index.css'
 import httpPlugin from '@/utils/http'
 import qs from 'qs'
 import VueCookie from 'vue-cookie'
+import moment from 'moment'
 
 Vue.prototype.$qs = qs
+Vue.prototype.$moment = moment
 
 Vue.config.productionTip = false
+// require('moment/locale/zh-cn')
 
-const moment = require('moment')
-require('moment/locale/zh-cn')
-
-Vue.use(require('vue-moment'), {
-  moment
-})
+// Vue.use(require('vue-moment'), { moment })
 Vue.use(ElementUI)
 Vue.use(httpPlugin)
 Vue.use(VueCookie)

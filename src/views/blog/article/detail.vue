@@ -5,42 +5,85 @@
       <span class="black-label" v-else>文章详情</span>
       <div class="button-box" v-if="acArticle">
         <el-button @click="goBack">返回</el-button>
-        <el-button @click="doneEdite" v-if="isNoEdit == true">编辑</el-button>
-        <el-button @click="savePush('ruleForm')" v-else>保存</el-button>
+        <el-button @click="doneEdite" v-if="isNoEdit">编辑</el-button>
+        <el-button @click="saveArticle('ruleForm')" v-else>保存</el-button>
       </div>
     </div>
-
-    <el-scrollbar class="contain-box">
-      <el-form
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        label-width="100px"
-        class="demo-ruleForm"
-      >
-      </el-form>
+    <el-scrollbar class="content-box">
+      <div class="content-wrap">
+        <div class="left-content">
+          <el-form
+            :model="ruleForm"
+            :rules="rules"
+            ref="ruleForm"
+            label-width="100px"
+            class="demo-ruleForm"
+          >
+            <el-form-item label="标题名称" prop="title">
+              <el-input
+                v-model="ruleForm.title"
+                placeholder="请输入标题"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="文章描述">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 4 }"
+                placeholder="请输入描述"
+                maxlength="150"
+                show-word-limit
+                v-model="ruleForm.description"
+              >
+              </el-input>
+            </el-form-item>
+            <el-form-item label="文章内容" prop="content">
+              <editor
+                :catchData="catchData"
+                :content="ruleForm.content"
+                class="editor"
+              ></editor>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="right-content"></div>
+      </div>
     </el-scrollbar>
     <div class="button-box-wrap">
       <el-button @click="cancelEditArticle">取消</el-button>
-      <el-button type="primary" @click="saveOnlineTemplate('dataForm')"
+      <el-button type="primary" @click="saveArticle('dataForm')"
         >保存</el-button
       >
     </div>
   </div>
 </template>
 <script>
+import editor from "@/components/editor";
 export default {
+  components: {
+    editor,
+  },
   data() {
     return {
-      ruleForm: {},
+      ruleForm: {
+        title: "",
+        description: "",
+        content: "",
+      },
       rules: {},
       acArticle: null,
       isNoEdit: false,
       configVisible: false,
       isNoEdit: false,
+      editorContent: "",
+      editor: null,
     };
   },
+
+  mounted() {},
+
   methods: {
+    catchData() {},
+
     goBack() {
       if (!this.isNoEdit && this.ruleForm.id) {
         this.$confirm("确定放弃编辑文章,返回首页", {
@@ -58,18 +101,18 @@ export default {
       }
     },
 
-    saveOnlineArticle() {
+    saveArticle() {},
 
-    },
-    
     cancelEditArticle() {
       this.$confirm("确定放弃编辑文章,返回?", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
       }).then(async () => {
         this.configVisible = false;
+        this.$parent.showDetail = false;
       });
     },
+
     cancelAdd() {
       this.isNoEdit = false;
       this.$parent.showDetail = false;
@@ -85,18 +128,13 @@ export default {
 @height3: 30px * @height;
 
 .detail-wrap {
-  height: calc(100% - @height3);
-  width: calc(100% - @width2);
-  margin: @height3 30px * @width 0;
-  background: #fff;
-  border-radius: 8px * @width;
+  height: 100%;
+  width: 100%;
   position: relative;
   .edit-title-wrap {
-    height: 64px * @height;
-    border-bottom: 1px solid #eee;
-    padding-left: 30px * @width;
+    height: 50px * @height;
     position: relative;
-    margin-bottom: 16px * @height;
+    margin-bottom: 10px * @height;
   }
   .button-box {
     position: absolute;
@@ -112,72 +150,35 @@ export default {
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: 600;
     color: #000000;
-    line-height: 64px * @height;
+    line-height: 50px * @height;
   }
 
-  .contain-box {
-    @heightCalc: 164px * @height;
+  .content-box {
+    @heightCalc: 120px * @height;
     height: calc(100% - @heightCalc);
-  }
-  /deep/ .el-form .el-form-item__label {
-    width: 86px * @width;
-    color: #000000;
-    font-size: 16px * @width;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-  }
-  /deep/ .el-date-editor.el-input,
-  .el-date-editor.el-input__inner {
-    width: 100%;
-  }
-  /deep/ .el-form {
-    & > :nth-child(1),
-    & > :nth-child(2),
-    & > :nth-child(3),
-    & > :nth-child(4) {
-      height: 40px * @height;
 
-      .el-form-item__content {
-        width: 480px * @width;
+    .content-wrap {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      .left-content {
+        flex: 4;
+        height: 100%;
+        margin-right: 16px * @width;
+        border: 1px solid #ccc;
+        padding: 20px * @height 24px * @width 0 0;
+      }
+
+      .right-content {
+        flex: 1;
+        height: 100%;
+        border: 1px solid #000;
       }
     }
-
-    & > :nth-child(5),
-    & > :nth-child(6),
-    & > :nth-child(7) {
-      width: 1125px * @width;
-    }
-    .el-select {
-      width: 100%;
-    }
   }
 
-  /deep/ .el-checkbox-group {
-    display: flex;
-    justify-content: space-around;
-
-    .el-checkbox {
-      font-size: 14px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      color: #000000;
-    }
-  }
-  .el-radio {
-    position: relative;
-    width: 100px;
-
-    .radio-text {
-      padding-left: 24px;
-    }
-  }
-  /deep/.el-radio .el-radio__label {
-    left: 0;
-    position: absolute !important;
-    z-index: 2;
-    padding-left: 0;
-    display: inline-block;
-  }
   .button-box-wrap {
     width: 100%;
     display: flex;
@@ -185,7 +186,7 @@ export default {
     align-items: center;
     position: absolute;
     bottom: 0;
-    height: 80px * @height;
+    height: 60px * @height;
     left: 0;
     .el-button {
       width: 120px * @width;

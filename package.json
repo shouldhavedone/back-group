@@ -12,16 +12,18 @@
     "core-js": "^3.6.5",
     "echarts": "^5.0.0",
     "element-ui": "^2.14.1",
+    "font-awesome": "^4.7.0",
+    "github-markdown-css": "^4.0.0",
     "less": "^3.13.1",
     "less-loader": "^7.2.1",
     "qs": "^6.9.4",
     "screenfull": "^5.1.0",
+    "simplemde": "^1.11.2",
     "vue": "^2.6.11",
     "vue-cookie": "^1.1.4",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.4.9",
-    "vuex": "^3.6.0",
-    "wangeditor": "^4.6.1"
+    "vuex": "^3.6.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

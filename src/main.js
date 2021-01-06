@@ -2,23 +2,26 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router.js'
 import store from './store'
-import './assets/style/reset.css'
-import './assets/icon/iconfont.css'
-import './assets/style/common.less'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 import httpPlugin from '@/utils/http'
 import qs from 'qs'
 import VueCookie from 'vue-cookie'
 import moment from 'moment'
+import 'github-markdown-css'
+import './assets/style/reset.css'
+import './assets/icon/iconfont.css'
+import './assets/style/common.less'
+import 'element-ui/lib/theme-chalk/index.css'
+import "font-awesome/css/font-awesome.min.css";
+import "simplemde/dist/simplemde.min.css";
 
 Vue.prototype.$qs = qs
 Vue.prototype.$moment = moment
 
 Vue.config.productionTip = false
-// require('moment/locale/zh-cn')
 
-// Vue.use(require('vue-moment'), { moment })
+// Vue.component('vue-simplemde', VueSimplemde)
+
 Vue.use(ElementUI)
 Vue.use(httpPlugin)
 Vue.use(VueCookie)

@@ -3,13 +3,14 @@
     <div class="edit-title-wrap">
       <span class="black-label" v-if="!acArticle">新增文章</span>
       <span class="black-label" v-else>文章详情</span>
+      <el-button @click="saveArticle('ruleForm')">保存</el-button>
       <div class="button-box" v-if="acArticle">
         <el-button @click="goBack">返回</el-button>
         <el-button @click="doneEdite" v-if="isNoEdit">编辑</el-button>
         <el-button @click="saveArticle('ruleForm')" v-else>保存</el-button>
       </div>
     </div>
-    <el-scrollbar class="content-box">
+    <div class="content-box">
       <div class="content-wrap">
         <div class="left-content">
           <el-form
@@ -28,7 +29,7 @@
             <el-form-item label="文章描述">
               <el-input
                 type="textarea"
-                :autosize="{ minRows: 2, maxRows: 4 }"
+                :autosize="{ minRows: 2, maxRows: 3 }"
                 placeholder="请输入描述"
                 maxlength="150"
                 show-word-limit
@@ -38,30 +39,22 @@
             </el-form-item>
             <el-form-item label="文章内容" prop="content">
               <editor
-                :catchData="catchData"
-                :content="ruleForm.content"
+                id="contentEditor"
                 class="editor"
-              ></editor>
+                ref="markdownEditor"
+              />
             </el-form-item>
           </el-form>
         </div>
         <div class="right-content"></div>
       </div>
-    </el-scrollbar>
-    <div class="button-box-wrap">
-      <el-button @click="cancelEditArticle">取消</el-button>
-      <el-button type="primary" @click="saveArticle('dataForm')"
-        >保存</el-button
-      >
     </div>
   </div>
 </template>
 <script>
 import editor from "@/components/editor";
 export default {
-  components: {
-    editor,
-  },
+  components: { editor },
   data() {
     return {
       ruleForm: {
@@ -82,8 +75,6 @@ export default {
   mounted() {},
 
   methods: {
-    catchData() {},
-
     goBack() {
       if (!this.isNoEdit && this.ruleForm.id) {
         this.$confirm("确定放弃编辑文章,返回首页", {
@@ -101,7 +92,12 @@ export default {
       }
     },
 
-    saveArticle() {},
+    saveArticle() {
+      this.$refs.ruleForm.validate(async (valid) => {
+        console.log(valid)
+        console.log(this.ruleForm)
+      })
+    },
 
     cancelEditArticle() {
       this.$confirm("确定放弃编辑文章,返回?", {
@@ -123,9 +119,7 @@ export default {
 <style lang="less">
 @width: 100vw/1920px;
 @height: 100vh/960px;
-@height1: 82px * @height;
-@width2: 60px * @width;
-@height3: 30px * @height;
+@height1: 60px * @height;
 
 .detail-wrap {
   height: 100%;
@@ -154,8 +148,7 @@ export default {
   }
 
   .content-box {
-    @heightCalc: 120px * @height;
-    height: calc(100% - @heightCalc);
+    height: calc(100% - @height1);
 
     .content-wrap {
       height: 100%;
@@ -195,6 +188,10 @@ export default {
     & > :nth-child(1) {
       margin-right: 40px * @width;
     }
+  }
+
+  .editor {
+    height: 610px * @height;
   }
 }
 </style>

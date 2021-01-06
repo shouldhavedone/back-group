@@ -5,7 +5,6 @@
       class="vue-simplemde-textarea"
       :name="name"
       :value="value"
-      @input="handleInput($event.target.value)"
     />
   </div>
 </template>
@@ -17,6 +16,7 @@ export default {
   data() {
     return {
       isValueUpdateFromInner: false,
+      simplemde: null,
     };
   },
   props: {
@@ -185,7 +185,7 @@ export default {
 }
 .vue-simplemde .CodeMirror-scroll {
   min-height: 300px;
-  height: 540px;
+  height: 530px;
 }
 .vue-simplemde .CodeMirror-code {
   padding-bottom: 40px;

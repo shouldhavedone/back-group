@@ -3,11 +3,11 @@
     <div class="edit-title-wrap">
       <span class="black-label" v-if="!acArticle">新增文章</span>
       <span class="black-label" v-else>文章详情</span>
-      <el-button @click="saveArticle('ruleForm')">保存</el-button>
+      <el-button @click="saveArticle">保存</el-button>
       <div class="button-box" v-if="acArticle">
         <el-button @click="goBack">返回</el-button>
         <el-button @click="doneEdite" v-if="isNoEdit">编辑</el-button>
-        <el-button @click="saveArticle('ruleForm')" v-else>保存</el-button>
+        <el-button @click="saveArticle" v-else>保存</el-button>
       </div>
     </div>
     <div class="content-box">
@@ -26,7 +26,7 @@
                 placeholder="请输入标题"
               ></el-input>
             </el-form-item>
-            <el-form-item label="文章描述">
+            <el-form-item label="文章描述" prop="description">
               <el-input
                 type="textarea"
                 :autosize="{ minRows: 2, maxRows: 3 }"
@@ -38,21 +38,21 @@
               </el-input>
             </el-form-item>
             <el-form-item label="文章内容" prop="content">
-              <editor
-                id="contentEditor"
-                class="editor"
-                ref="markdownEditor"
-              />
+              <editor v-model="ruleForm.content" id="contentEditor" class="editor" ref="markdownEditor" />
             </el-form-item>
           </el-form>
         </div>
-        <div class="right-content"></div>
+        <div class="right-content">
+          
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 import editor from "@/components/editor";
+import api from "@/api/blog/article";
+
 export default {
   components: { editor },
   data() {
@@ -62,19 +62,30 @@ export default {
         description: "",
         content: "",
       },
-      rules: {},
+      rules: {
+        title: [
+          { required: true, message: "标题不能为空", trigger: "blur" },
+          { min: 3, message: "多编几个字吧", trigger: "blur" },
+        ],
+        description: [
+          { required: true, message: "描述不能为空", trigger: "change" },
+        ],
+      },
       acArticle: null,
       isNoEdit: false,
       configVisible: false,
       isNoEdit: false,
       editorContent: "",
       editor: null,
+      labelData: [],
+
     };
   },
 
   mounted() {},
 
   methods: {
+
     goBack() {
       if (!this.isNoEdit && this.ruleForm.id) {
         this.$confirm("确定放弃编辑文章,返回首页", {
@@ -94,9 +105,9 @@ export default {
 
     saveArticle() {
       this.$refs.ruleForm.validate(async (valid) => {
-        console.log(valid)
-        console.log(this.ruleForm)
-      })
+        console.log(valid);
+        console.log(this.ruleForm);
+      });
     },
 
     cancelEditArticle() {
@@ -112,6 +123,13 @@ export default {
     cancelAdd() {
       this.isNoEdit = false;
       this.$parent.showDetail = false;
+    },
+
+    async getLabelList() {
+      const res = await this.$http.get(api.getAllLabel);
+      if (res && res.isSucceed) {
+        this.labelData = res.data;
+      }
     },
   },
 };

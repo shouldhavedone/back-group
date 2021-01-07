@@ -3,8 +3,12 @@
     <div class="edit-title-wrap">
       <span class="black-label" v-if="!acArticle">新增文章</span>
       <span class="black-label" v-else>文章详情</span>
-      <el-button @click="saveArticle">保存</el-button>
-      <div class="button-box" v-if="acArticle">
+      <div class="button-box" v-if="!acArticle">
+        <el-button @click="goBack">取消</el-button>
+        <el-button>存为草稿</el-button>
+        <el-button>文章发布</el-button>
+      </div>
+      <div class="button-box" v-else>
         <el-button @click="goBack">返回</el-button>
         <el-button @click="doneEdite" v-if="isNoEdit">编辑</el-button>
         <el-button @click="saveArticle" v-else>保存</el-button>
@@ -49,9 +53,21 @@
         </div>
         <div class="right-content">
           <div class="label-wrap">
-            <div>分类</div>
+            <div>文章分类</div>
             <el-radio-group v-model="ruleForm.labelID" size="small">
-              <el-radio-button v-for="(item, index) in labelData" :key="index" :label="item.id">{{item.name}}</el-radio-button>
+              <el-radio-button
+                v-for="(item, index) in labelData"
+                :key="index"
+                :label="item.id"
+                >{{ item.name }}</el-radio-button
+              >
+            </el-radio-group>
+          </div>
+
+          <div class="top-wrap">
+            <el-radio-group v-model="ruleForm.top">
+              <el-radio label="1" border>文章顶置</el-radio>
+              <el-radio label="0" border>不顶置</el-radio>
             </el-radio-group>
           </div>
         </div>
@@ -73,7 +89,7 @@ export default {
         content: "",
         labelID: "",
         image: "",
-        top: 0,
+        top: "0",
         status: 1,
       },
       rules: {
@@ -170,17 +186,6 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-  
-
-  .el-radio-group  {
-    .el-radio-button {
-
-    }
-  }
-</style>
-
-
 
 <style lang="less">
 @width: 100vw/1920px;
@@ -236,6 +241,63 @@ export default {
         height: 100%;
         border-radius: 6px * @width;
         border: 1px solid #ccc;
+        padding: 20px * @height 12px * @width;
+
+        .label-wrap {
+          padding-bottom: 8px * @height;
+          border-bottom: 1px solid #dcdfe6;
+
+          & > div:first-child {
+            text-align: center;
+            font-size: 16px * @width;
+            font-weight: 700;
+            margin-bottom: 16px * @height;
+          }
+
+          .el-radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+          }
+
+          .el-radio-button:first-child .el-radio-button__inner {
+            border-left: none;
+            border-radius: 0;
+          }
+
+          .el-radio-button:last-child .el-radio-button__inner {
+            border-radius: 0;
+          }
+
+          .el-radio-button__inner {
+            border: none;
+          }
+
+          .el-radio-button {
+            margin: 6px * @height 6px * @width;
+            border: 1px solid #dcdfe6;
+            background: #aaa;
+          }
+        }
+
+        .top-wrap {
+          height: 60px * @height;
+          padding: 10px * @height 0;
+          border-bottom: 1px solid #dcdfe6;
+
+          .el-radio-group {
+            display: flex;
+            justify-content: space-around;
+
+            .el-radio {
+              margin-right: 0;
+            }
+
+            .el-radio__label {
+              font-weight: 700;
+            }
+          }
+        }
       }
     }
   }

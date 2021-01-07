@@ -70,11 +70,11 @@ export default {
           previewRender: this.previewRender,
           autoDownloadFontAwesome: false,
           renderingConfig: {},
-          autosave: {
-            enabled: true,
-            uniqueId: "MyUniqueID",
-            delay: 2 * 60 * 1000,
-          },
+          // autosave: {
+          //   enabled: true,
+          //   uniqueId: "MyUniqueID",
+          //   delay: 2 * 60 * 1000,
+          // },
           insertTexts: {
             horizontalRule: ["", "\n\n-----\n\n"],
             image: ["![](http://", ")"],
@@ -156,6 +156,7 @@ export default {
     },
   },
   destroyed() {
+    this.isValueUpdateFromInner = true;
     this.simplemde = null;
   },
   watch: {

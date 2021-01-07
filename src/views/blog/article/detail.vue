@@ -38,12 +38,22 @@
               </el-input>
             </el-form-item>
             <el-form-item label="文章内容" prop="content">
-              <editor v-model="ruleForm.content" id="contentEditor" class="editor" ref="markdownEditor" />
+              <editor
+                v-model="ruleForm.content"
+                id="contentEditor"
+                class="editor"
+                ref="markdownEditor"
+              />
             </el-form-item>
           </el-form>
         </div>
         <div class="right-content">
-          
+          <div class="label-wrap">
+            <div>分类</div>
+            <el-radio-group v-model="ruleForm.labelID" size="small">
+              <el-radio-button v-for="(item, index) in labelData" :key="index" :label="item.id">{{item.name}}</el-radio-button>
+            </el-radio-group>
+          </div>
         </div>
       </div>
     </div>
@@ -61,6 +71,10 @@ export default {
         title: "",
         description: "",
         content: "",
+        labelID: "",
+        image: "",
+        top: 0,
+        status: 1,
       },
       rules: {
         title: [
@@ -78,13 +92,22 @@ export default {
       editorContent: "",
       editor: null,
       labelData: [],
-
     };
   },
 
-  mounted() {},
+  mounted() {
+    this.resetData();
+    this.getLabelList();
+  },
 
   methods: {
+    resetData() {
+      this.ruleForm = {
+        title: "",
+        description: "",
+        content: "",
+      };
+    },
 
     goBack() {
       if (!this.isNoEdit && this.ruleForm.id) {
@@ -105,8 +128,14 @@ export default {
 
     saveArticle() {
       this.$refs.ruleForm.validate(async (valid) => {
-        console.log(valid);
-        console.log(this.ruleForm);
+        if (valid) {
+          this.$confirm("确认发布文章？", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+          }).then(async () => {
+            console.log(this.ruleForm);
+          });
+        }
       });
     },
 
@@ -132,8 +161,27 @@ export default {
       }
     },
   },
+
+  computed: {
+    userInfo() {
+      return JSON.parse(sessionStorage.getItem("userInfo"));
+    },
+  },
 };
 </script>
+
+<style lang="less" scoped>
+  
+
+  .el-radio-group  {
+    .el-radio-button {
+
+    }
+  }
+</style>
+
+
+
 <style lang="less">
 @width: 100vw/1920px;
 @height: 100vh/960px;
@@ -180,12 +228,14 @@ export default {
         margin-right: 16px * @width;
         border: 1px solid #ccc;
         padding: 20px * @height 24px * @width 0 0;
+        border-radius: 6px * @width;
       }
 
       .right-content {
         flex: 1;
         height: 100%;
-        border: 1px solid #000;
+        border-radius: 6px * @width;
+        border: 1px solid #ccc;
       }
     }
   }

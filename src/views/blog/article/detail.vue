@@ -5,8 +5,8 @@
       <span class="black-label" v-else>文章详情</span>
       <div class="button-box" v-if="!acArticle">
         <el-button @click="goBack">取消</el-button>
-        <el-button>存为草稿</el-button>
-        <el-button>文章发布</el-button>
+        <el-button @click="saveArticle">存为草稿</el-button>
+        <el-button @click="saveArticle">文章发布</el-button>
       </div>
       <div class="button-box" v-else>
         <el-button @click="goBack">返回</el-button>
@@ -53,7 +53,7 @@
         </div>
         <div class="right-content">
           <div class="label-wrap">
-            <div>文章分类</div>
+            <div class="text-label">文章分类</div>
             <el-radio-group v-model="ruleForm.labelID" size="small">
               <el-radio-button
                 v-for="(item, index) in labelData"
@@ -63,12 +63,72 @@
               >
             </el-radio-group>
           </div>
-
           <div class="top-wrap">
             <el-radio-group v-model="ruleForm.top">
               <el-radio label="1" border>文章顶置</el-radio>
               <el-radio label="0" border>不顶置</el-radio>
             </el-radio-group>
+          </div>
+          <div class="keyword-wrap">
+            <div class="text-label">关键字：</div>
+            <el-input
+              v-model="ruleForm.keyword"
+              placeholder="请输入关键字"
+              clearable
+            ></el-input>
+          </div>
+          <div class="image-wrap">
+            <div class="text-label">文章缩略图</div>
+            <el-upload
+              :action="uploadUrl()"
+              :data="qiniuData"
+              list-type="picture-card"
+              :file-list="imageList"
+              :auto-upload="true"
+              :on-change="uploadPictureChange"
+              :on-success="uploadPictureSuccess"
+              :class="uploadDisabled ? 'upload' : ''"
+              :limit="1"
+              class="upload-box"
+              :before-upload="beforeUpload"
+            >
+              <div slot="default" class="upload-bg">
+                <i class="el-icon-plus"></i>
+              </div>
+              <div slot="file" slot-scope="{ file }">
+                <img
+                  class="el-upload-list__item-thumbnail"
+                  :src="file.url"
+                  alt=""
+                />
+                <span class="el-upload-list__item-actions">
+                  <span
+                    class="el-upload-list__item-preview"
+                    @click="handlePictureCardPreview(file)"
+                  >
+                    <i class="el-icon-zoom-in"></i>
+                  </span>
+                  <span
+                    v-if="!disabled"
+                    class="el-upload-list__item-delete"
+                    @click="handleDownload(file)"
+                  >
+                    <i class="el-icon-download"></i>
+                  </span>
+                  <span
+                    v-if="!disabled"
+                    class="el-upload-list__item-delete"
+                    @click="handleRemove(file)"
+                  >
+                    <i class="el-icon-delete"></i>
+                  </span>
+                </span>
+              </div>
+            </el-upload>
+
+            <el-dialog :visible.sync="dialogVisible">
+              <img width="100%" :src="dialogImageUrl" alt="" />
+            </el-dialog>
           </div>
         </div>
       </div>
@@ -78,20 +138,24 @@
 <script>
 import editor from "@/components/editor";
 import api from "@/api/blog/article";
+import baseUrl from "@/api/baseUrl.js";
 
 export default {
   components: { editor },
   data() {
     return {
       ruleForm: {
+        id: "",
         title: "",
         description: "",
         content: "",
         labelID: "",
-        image: "",
+        keyword: "",
+        imageUrl: "",
         top: "0",
         status: 1,
       },
+      imageList: [],
       rules: {
         title: [
           { required: true, message: "标题不能为空", trigger: "blur" },
@@ -99,6 +163,9 @@ export default {
         ],
         description: [
           { required: true, message: "描述不能为空", trigger: "change" },
+        ],
+        content: [
+          { required: true, message: "内容不能为空", trigger: "change" },
         ],
       },
       acArticle: null,
@@ -108,15 +175,77 @@ export default {
       editorContent: "",
       editor: null,
       labelData: [],
+      dialogImageUrl: "",
+      dialogVisible: false,
+      disabled: false,
+      uploadDisabled: false,
+      qiniuData: {
+        key: "",
+        token: "",
+      },
     };
   },
-
+  watch: {
+    imageList: function (newVal, oldVal) {
+      this.uploadDisabled = newVal.length > 0 ? true : false;
+    },
+  },
   mounted() {
     this.resetData();
     this.getLabelList();
   },
 
   methods: {
+    uploadUrl() {
+      return baseUrl + "/back-sys/back-auth/qiniu/upload";
+    },
+
+    async beforeUpload() {
+      const res = await this.$http.get(api.getQiniuToken);
+      if (res && res.isSucceed) {
+        this.qiniuData.token = res.data;
+      }
+    },
+
+    checkData() {
+      console.log(this.ruleForm.labelID);
+      console.log(this.ruleForm.keyword);
+      console.log(this.ruleForm.imageUrl);
+      console.log(this.ruleForm.top);
+    },
+
+    uploadPictureChange(file, fileList) {
+      this.qiniuData.key = file.name;
+      this.imageList = fileList;
+    },
+
+    uploadPictureSuccess(file, fileList) {
+      // if (file.state == "success") {
+      //   this.$message({
+      //     message: "上传成功",
+      //     type: "success",
+      //   });
+      //   this.ruleForm.imageUrl = file.message;
+      //   this.ruleForm.imageList = [];
+      // } else {
+      //   this.$message.error("图片上传失败");
+      // }
+    },
+
+    handleRemove(file) {
+      console.log(file);
+      
+    },
+
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+
+    handleDownload(file) {
+      console.log(file);
+    },
+
     resetData() {
       this.ruleForm = {
         title: "",
@@ -143,6 +272,7 @@ export default {
     },
 
     saveArticle() {
+      this.checkData();
       this.$refs.ruleForm.validate(async (valid) => {
         if (valid) {
           this.$confirm("确认发布文章？", {
@@ -234,6 +364,11 @@ export default {
         border: 1px solid #ccc;
         padding: 20px * @height 24px * @width 0 0;
         border-radius: 6px * @width;
+
+        .el-form-item__label {
+          font-weight: 700;
+          font-size: 14px * @width;
+        }
       }
 
       .right-content {
@@ -246,14 +381,6 @@ export default {
         .label-wrap {
           padding-bottom: 8px * @height;
           border-bottom: 1px solid #dcdfe6;
-
-          & > div:first-child {
-            text-align: center;
-            font-size: 16px * @width;
-            font-weight: 700;
-            margin-bottom: 16px * @height;
-          }
-
           .el-radio-group {
             display: flex;
             flex-wrap: wrap;
@@ -297,6 +424,75 @@ export default {
               font-weight: 700;
             }
           }
+        }
+
+        .keyword-wrap {
+          margin-top: 10px * @height;
+          border-bottom: 1px solid #dcdfe6;
+          display: flex;
+          align-items: center;
+
+          & > div:first-child {
+            width: 100px * @width;
+            margin-bottom: 0;
+          }
+
+          .el-input__inner {
+            border: none;
+            padding: 0;
+          }
+        }
+
+        .image-wrap {
+          margin-top: 16px * @height;
+
+          .upload-bg {
+            height: 148px * @height;
+            width: 100%;
+            background-image: url("../../../assets/images/upload-bg.jpg");
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .upload-box {
+            text-align: center;
+            .el-upload--picture-card {
+              height: 100%;
+              width: 100%;
+            }
+          }
+
+          .upload {
+            width: 100%;
+            .el-upload--picture-card {
+              display: none !important;
+            }
+          }
+
+          .el-upload-list--picture-card {
+            display: inline-block;
+            width: 100%;
+            // height: 170px * @height;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ccc;
+
+            .el-upload-list__item {
+              border: none;
+              margin: 0;
+              height: 148px * @height;
+            }
+          }
+        }
+
+        .text-label {
+          text-align: center;
+          font-size: 16px * @width;
+          font-weight: 700;
+          margin-bottom: 16px * @height;
         }
       }
     }

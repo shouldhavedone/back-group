@@ -15,6 +15,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import "font-awesome/css/font-awesome.min.css";
 import "simplemde/dist/simplemde.min.css";
 
+import * as qiniu from 'qiniu-js'
+Vue.use(qiniu)
+
 Vue.prototype.$qs = qs
 Vue.prototype.$moment = moment
 

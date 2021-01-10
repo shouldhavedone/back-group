@@ -52,84 +52,110 @@
           </el-form>
         </div>
         <div class="right-content">
-          <div class="label-wrap">
-            <div class="text-label">文章分类</div>
-            <el-radio-group v-model="ruleForm.labelID" size="small">
-              <el-radio-button
-                v-for="(item, index) in labelData"
-                :key="index"
-                :label="item.id"
-                >{{ item.name }}</el-radio-button
-              >
-            </el-radio-group>
-          </div>
-          <div class="top-wrap">
-            <el-radio-group v-model="ruleForm.top">
-              <el-radio label="1" border>文章顶置</el-radio>
-              <el-radio label="0" border>不顶置</el-radio>
-            </el-radio-group>
-          </div>
-          <div class="keyword-wrap">
-            <div class="text-label">关键字：</div>
-            <el-input
-              v-model="ruleForm.keyword"
-              placeholder="请输入关键字"
-              clearable
-            ></el-input>
-          </div>
-          <div class="image-wrap">
-            <div class="text-label">文章缩略图</div>
-            <el-upload
-              :action="uploadUrl()"
-              :data="qiniuData"
-              list-type="picture-card"
-              :file-list="imageList"
-              :auto-upload="true"
-              :on-change="uploadPictureChange"
-              :on-success="uploadPictureSuccess"
-              :class="uploadDisabled ? 'upload' : ''"
-              :limit="1"
-              class="upload-box"
-              :before-upload="beforeUpload"
-            >
-              <div slot="default" class="upload-bg">
-                <i class="el-icon-plus"></i>
-              </div>
-              <div slot="file" slot-scope="{ file }">
-                <img
-                  class="el-upload-list__item-thumbnail"
-                  :src="file.url"
-                  alt=""
-                />
-                <span class="el-upload-list__item-actions">
-                  <span
-                    class="el-upload-list__item-preview"
-                    @click="handlePictureCardPreview(file)"
+          <el-scrollbar style="height: 100%">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+              <el-form-item prop="label_id">
+                <div class="label-wrap">
+                  <div class="text-label">文章分类</div>
+                  <el-radio-group v-model="ruleForm.label_id" size="small">
+                    <el-radio-button
+                      v-for="(item, index) in labelData"
+                      :key="index"
+                      :label="item.id"
+                      >{{ item.name }}</el-radio-button
+                    >
+                  </el-radio-group>
+                </div>
+              </el-form-item>
+              <el-form-item prop="top">
+                <div class="top-wrap">
+                  <el-radio-group v-model="ruleForm.top">
+                    <el-radio label="1" border>文章顶置</el-radio>
+                    <el-radio label="0" border>不顶置</el-radio>
+                  </el-radio-group>
+                </div>
+              </el-form-item>
+              <el-form-item prop="createtime">
+                <div class="time-wrap">
+                  <div class="text-label">发表时间：</div>
+                  <el-date-picker
+                    v-model="ruleForm.createtime"
+                    type="datetime"
+                    placeholder="选择发布时间"
+                    align="right"
+                    :picker-options="pickerOptions"
+                    class="time-box"
                   >
-                    <i class="el-icon-zoom-in"></i>
-                  </span>
-                  <span
-                    v-if="!disabled"
-                    class="el-upload-list__item-delete"
-                    @click="handleDownload(file)"
+                  </el-date-picker>
+                </div>
+              </el-form-item>
+              <el-form-item prop="keyword">
+                <div class="keyword-wrap">
+                  <div class="text-label">关键字：</div>
+                  <el-input
+                    v-model="ruleForm.keyword"
+                    placeholder="请输入关键字"
+                    clearable
+                  ></el-input>
+                </div>
+              </el-form-item>
+              <el-form-item prop="image">
+                <div class="image-wrap">
+                  <div class="text-label">文章缩略图</div>
+                  <el-upload
+                    :action="uploadUrl()"
+                    :data="qiniuData"
+                    list-type="picture-card"
+                    :file-list="imageList"
+                    :auto-upload="true"
+                    :on-change="uploadPictureChange"
+                    :on-success="uploadPictureSuccess"
+                    :class="uploadDisabled ? 'upload' : ''"
+                    :limit="1"
+                    class="upload-box"
+                    :before-upload="beforeUpload"
                   >
-                    <i class="el-icon-download"></i>
-                  </span>
-                  <span
-                    v-if="!disabled"
-                    class="el-upload-list__item-delete"
-                    @click="handleRemove(file)"
-                  >
-                    <i class="el-icon-delete"></i>
-                  </span>
-                </span>
-              </div>
-            </el-upload>
+                    <div slot="default" class="upload-bg">
+                      <i class="el-icon-plus"></i>
+                    </div>
+                    <div slot="file" slot-scope="{ file }">
+                      <img
+                        class="el-upload-list__item-thumbnail"
+                        :src="file.url"
+                        alt=""
+                      />
+                      <span class="el-upload-list__item-actions">
+                        <span
+                          class="el-upload-list__item-preview"
+                          @click="handlePictureCardPreview(file)"
+                        >
+                          <i class="el-icon-zoom-in"></i>
+                        </span>
+                        <span
+                          v-if="!disabled"
+                          class="el-upload-list__item-delete"
+                          @click="handleDownload(file)"
+                        >
+                          <i class="el-icon-download"></i>
+                        </span>
+                        <span
+                          v-if="!disabled"
+                          class="el-upload-list__item-delete"
+                          @click="handleRemove(file)"
+                        >
+                          <i class="el-icon-delete"></i>
+                        </span>
+                      </span>
+                    </div>
+                  </el-upload>
 
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="" />
-            </el-dialog>
-          </div>
+                  <el-dialog :visible.sync="dialogVisible">
+                    <img width="100%" :src="dialogImageUrl" alt="" />
+                  </el-dialog>
+                </div>
+              </el-form-item>
+            </el-form>
+          </el-scrollbar>
         </div>
       </div>
     </div>
@@ -149,9 +175,10 @@ export default {
         title: "",
         description: "",
         content: "",
-        labelID: "",
+        label_id: "",
         keyword: "",
-        imageUrl: "",
+        image: "",
+        createtime: "",
         top: "0",
         status: 1,
       },
@@ -183,6 +210,32 @@ export default {
         key: "",
         token: "",
       },
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "今天",
+            onClick(picker) {
+              picker.$emit("pick", new Date());
+            },
+          },
+          {
+            text: "昨天",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit("pick", date);
+            },
+          },
+          {
+            text: "一周前",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", date);
+            },
+          },
+        ],
+      },
     };
   },
   watch: {
@@ -197,7 +250,7 @@ export default {
 
   methods: {
     uploadUrl() {
-      return baseUrl + "/back-sys/back-auth/qiniu/upload";
+      return baseUrl + api.uploadImg;
     },
 
     async beforeUpload() {
@@ -208,10 +261,6 @@ export default {
     },
 
     checkData() {
-      console.log(this.ruleForm.labelID);
-      console.log(this.ruleForm.keyword);
-      console.log(this.ruleForm.imageUrl);
-      console.log(this.ruleForm.top);
     },
 
     uploadPictureChange(file, fileList) {
@@ -220,21 +269,25 @@ export default {
     },
 
     uploadPictureSuccess(file, fileList) {
-      // if (file.state == "success") {
-      //   this.$message({
-      //     message: "上传成功",
-      //     type: "success",
-      //   });
-      //   this.ruleForm.imageUrl = file.message;
-      //   this.ruleForm.imageList = [];
-      // } else {
-      //   this.$message.error("图片上传失败");
-      // }
+      if (file.isSucceed) {
+        this.$message({
+          message: "上传成功",
+          type: "success",
+        });
+        this.imageList = [];
+        this.ruleForm.image = file.data;
+      }
     },
 
-    handleRemove(file) {
-      console.log(file);
-      
+    async handleRemove(file) {
+      const params = {
+        filename: file.name,
+      };
+      const res = await this.$http.post(api.delImg, params);
+      if (res && res.isSucceed) {
+        this.imageList = [];
+        this.ruleForm.image = "";
+      }
     },
 
     handlePictureCardPreview(file) {
@@ -248,10 +301,19 @@ export default {
 
     resetData() {
       this.ruleForm = {
+        id: "",
+        user_id: "",
         title: "",
         description: "",
         content: "",
+        label_id: "",
+        keyword: "",
+        image: "",
+        createtime: "",
+        top: "0",
+        status: 1,
       };
+      this.imageList = [];
     },
 
     goBack() {
@@ -279,7 +341,15 @@ export default {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
           }).then(async () => {
-            console.log(this.ruleForm);
+            this.ruleForm.content = JSON.stringify(this.$refs.markdownEditor.simplemde.markdown(this.ruleForm.content))
+            this.ruleForm.user_id = this.userInfo.id;
+            const res = await this.$http.post(api.saveArticle, this.ruleForm);
+            console.log(res)
+            if(res && res.isSucceed) {
+              this.$message.success(res.message);
+              this.resetData();
+              this.cancelAdd();
+            }
           });
         }
       });
@@ -426,6 +496,7 @@ export default {
           }
         }
 
+        .time-wrap,
         .keyword-wrap {
           margin-top: 10px * @height;
           border-bottom: 1px solid #dcdfe6;
@@ -433,7 +504,7 @@ export default {
           align-items: center;
 
           & > div:first-child {
-            width: 100px * @width;
+            width: 86px * @width;
             margin-bottom: 0;
           }
 
@@ -441,6 +512,15 @@ export default {
             border: none;
             padding: 0;
           }
+        }
+        .el-date-editor.el-input,
+        .el-date-editor.el-input__inner {
+          margin-left: -10px * @width;
+        }
+
+        .time-box .el-input__inner {
+          border: none;
+          padding-left: 32px * @width;
         }
 
         .image-wrap {
@@ -492,7 +572,10 @@ export default {
           text-align: center;
           font-size: 16px * @width;
           font-weight: 700;
-          margin-bottom: 16px * @height;
+        }
+
+        .el-form-item {
+          margin-bottom: 0;
         }
       }
     }

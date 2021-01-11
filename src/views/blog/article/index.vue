@@ -6,7 +6,12 @@
         <div class="search-wrap">
           <div>
             <span>文章分类：</span>
-            <el-select v-model="labelId" @change="getArticleList" clearable placeholder="全部">
+            <el-select
+              v-model="labelId"
+              @change="getArticleList"
+              clearable
+              placeholder="全部"
+            >
               <el-option
                 v-for="item in labelData"
                 :key="item.id"
@@ -61,7 +66,7 @@
 import ctable from "@/components/table";
 import cpagenation from "@/components/pagenation";
 import cheader from "@/components/header";
-import cdetail from './detail';
+import cdetail from "./detail";
 import api from "@/api/blog/article";
 export default {
   components: {
@@ -91,7 +96,7 @@ export default {
           minWidth: 150,
         },
         {
-          prop: "label",
+          prop: "labelName",
           label: "分类",
           minWidth: 100,
         },
@@ -149,7 +154,6 @@ export default {
   },
 
   methods: {
-
     addArticle() {
       this.showDetail = true;
     },
@@ -168,6 +172,7 @@ export default {
     },
 
     async getArticleList() {
+      this.loading = true;
       const params = {
         page: this.pageparams.page,
         rows: this.pageparams.pageSize,
@@ -177,8 +182,12 @@ export default {
       const res = await this.$http.get(
         `${api.getArticleList}?${this.$qs.stringify(params)}`
       );
-
-      console.log(res);
+      this.loading = false;
+      if (res && res.isSucceed) {
+        console.log(res.data)
+        res.data.forEach(item => item.labelName = item.Label.name)
+        this.dataList = res.data;
+      }
     },
   },
 };
@@ -205,7 +214,7 @@ export default {
       .search-wrap {
         width: 700px * @width;
         display: flex;
-        &>div {
+        & > div {
           flex: 1;
         }
         & > div:not(:last-child) {
